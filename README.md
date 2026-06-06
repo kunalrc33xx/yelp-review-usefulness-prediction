@@ -17,6 +17,18 @@
 
 ---
 
+## EDA: What Makes a Review Useful?
+
+![Class distribution and review length by usefulness](yelp_class_and_length_distribution.png)
+
+The dataset is heavily imbalanced (about 7:1 not-useful to useful). Useful reviews tend to be longer, but length alone is not sufficient — a power user writing 50 words outperforms a new user writing 500.
+
+![Top TF-IDF terms by class](yelp_tfidf_features.png)
+
+Top TF-IDF terms are largely shared across classes, which is why text alone is insufficient. The model needs behavioral context to break ties.
+
+---
+
 ## Model Performance
 
 ### Model Comparison
@@ -33,6 +45,14 @@ We benchmarked six models on TPR@FPR<=10%, a metric that rewards identifying use
 | Decision Tree | ~0.41 | ~0.76 |
 
 LightGBM's advantage comes from its ability to handle mixed sparse/dense feature matrices efficiently, which is critical when TF-IDF produces 300 sparse columns alongside 64 dense structured features.
+
+![Training vs Validation AUC by boosting round](yelp_training_auc_curve.png)
+
+Early stopping at round 387 — validation AUC plateaus cleanly at 0.904 with no overfitting.
+
+![Learning curves: TPR and ROC-AUC vs training set size](yelp_learning_curves.png)
+
+Performance peaks around 950K training samples. The slight drop at 1.27M suggests the model is saturating on the available signal — more data alone won't help here.
 
 Full model outputs, confusion matrices, and ROC curves are in the notebook: `budt758t-group-1-final-python-code.ipynb`
 
